@@ -1,6 +1,6 @@
 {
     "name": "softon/laravel-face-detect",
-    "description": "A Laravel Package for Face Detection in Images.",
+    "description": "A Laravel Package for Face Detection and Cropping in Images.",
     "license": "MIT",
     "keywords": [
         "Laravel",
@@ -14,8 +14,7 @@
     ],
     "require": {
         "php": ">=5.3",
-        "illuminate/support": "~4.0|~5.0|~6.0",
-		"intervention/image": "dev-master"
+        "illuminate/support": "~5.0|~6.0"
     },
     "autoload": {
         "psr-4": {

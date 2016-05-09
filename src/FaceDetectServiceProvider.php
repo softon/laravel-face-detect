@@ -1,9 +1,9 @@
 <?php namespace Softon\LaravelFaceDetect;
 
 use Illuminate\Support\Facades\Config;
-use Intervention\Image\ImageServiceProviderLaravel5 as BaseServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
-class FaceDetectServiceProvider extends BaseServiceProvider {
+class FaceDetectServiceProvider extends ServiceProvider {
 
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -25,7 +25,9 @@ class FaceDetectServiceProvider extends BaseServiceProvider {
 
 
     public function boot(){
-		
+		$this->publishes([
+				__DIR__.'/config/config.php' => base_path('config/facedetect.php'),
+		]);
     }
 
 	/**

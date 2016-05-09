@@ -4,12 +4,17 @@
 class FaceDetect {
 
     protected $detection_data;
-    protected $canvas;
-    protected $face;
+    public $canvas;
+    public $face;
+    public $face_found=false;
     private $reduced_canvas;
+    public $cropped_canvas;
+    private $padding_width;
+    private $padding_height;
 
     public function __construct() {
-
+        $this->padding_width = config('facedetect.padding_width');
+        $this->padding_height = config('facedetect.padding_height');
 
         $detection_file = base_path().'/vendor/softon/laravel-face-detect/src/Data/detection.dat';
         if (is_file($detection_file)) {
@@ -19,7 +24,7 @@ class FaceDetect {
         }
     }
 
-    public function face_detect($file) {
+    public function extract($file) {
         if (is_resource($file)) {
             $this->canvas = $file;
         }
@@ -58,23 +63,27 @@ class FaceDetect {
             $stats = $this->get_img_stats($this->canvas);
             $this->face = $this->do_detect_greedy_big_to_small($stats['ii'], $stats['ii2'], $stats['width'], $stats['height']);
         }
-        return ($this->face['w'] > 0);
+        if($this->face['w']>0){
+            $this->face_found = true;
+        }
+        return $this;
     }
 
+    public function save($file_name)
+    {
+        if(file_exists($file_name)){
+            throw new \Exception("Save File Already Exists ($file_name)");
+        }
+        $to_crop = [
+            'x' => $this->face['x']-($this->padding_width/2),
+            'y' => $this->face['y']-($this->padding_height/2),
+            'width' => $this->face['w']+$this->padding_width,
+            'height' => $this->face['w']+$this->padding_height,
+        ];
 
-    public function toJpeg() {
-        $color = imagecolorallocate($this->canvas, 255, 0, 0); //red
-        imagerectangle($this->canvas, $this->face['x'], $this->face['y'], $this->face['x']+$this->face['w'], $this->face['y']+ $this->face['w'], $color);
-        header('Content-type: image/jpeg');
-        imagejpeg($this->canvas);
-    }
+        $this->cropped_canvas = imagecrop($this->canvas, $to_crop);
 
-    public function toJson() {
-        return json_encode($this->face);
-    }
-
-    public function getFace() {
-        return $this->face;
+        imagejpeg($this->cropped_canvas, $file_name, 100);
     }
 
     protected function get_img_stats($canvas){
