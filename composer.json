@@ -1,0 +1,26 @@
+{
+    "name": "softon/laravel-face-detect",
+    "description": "A Laravel Package for Face Detection in Images.",
+    "license": "MIT",
+    "keywords": [
+        "Laravel",
+        "Face Detection"
+    ],
+    "authors": [
+        {
+            "name": "Shiburaj",
+            "email": "powerupneo@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3",
+        "illuminate/support": "~4.0|~5.0|~6.0",
+		"intervention/image": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Softon\\LaravelFaceDetect\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
