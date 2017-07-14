@@ -25,11 +25,18 @@ class FaceDetect {
     }
 
     public function extract($file) {
+
         if (is_resource($file)) {
             $this->canvas = $file;
         }
         elseif (is_file($file)) {
+            $array = explode('.', $file);
+            $extencion = strtolower(end($array));
+            if($extencion == 'png'){
+                $this->canvas = imagecreatefrompng($file);
+            }else{
             $this->canvas = imagecreatefromjpeg($file);
+            }
         }
         else {
             throw new \Exception("Can not load $file");
